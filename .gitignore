@@ -1,0 +1,27 @@
+# Секреты
+.env
+.env.*
+!.env.example
+
+# Данные и логи
+data/
+*.db
+*.sqlite3
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+build/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
