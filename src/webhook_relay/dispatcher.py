@@ -53,8 +53,8 @@ class Dispatcher:
         s = self.settings
         if hint is not None:
             return min(hint, s.retry_max_seconds)
-        delay = min(s.retry_base_seconds * 2 ** (attempt - 1), s.retry_max_seconds)
-        return delay * (0.8 + 0.4 * self.rng())  # ±20 %
+        delay = s.retry_base_seconds * 2 ** (attempt - 1) * (0.8 + 0.4 * self.rng())  # ±20 % jitter
+        return min(delay, s.retry_max_seconds)  # the ceiling comes last: jitter never pushes past it
 
     def headers_for(self, d: Delivery) -> dict[str, str]:
         body = d.body.encode()

@@ -65,6 +65,7 @@ def test_jitter_range(store, relay, settings, http):
     low = Dispatcher(store, relay, settings, http, rng=lambda: 0.0).backoff(1)
     high = Dispatcher(store, relay, settings, http, rng=lambda: 0.999999).backoff(1)
     assert low == 24 and 35.9 < high <= 36  # 30 s ± 20 %
+    assert Dispatcher(store, relay, settings, http, rng=lambda: 0.999999).backoff(30) == 600  # never above the cap
 
 
 async def test_client_errors_are_not_retried(dispatcher, store, targets):
