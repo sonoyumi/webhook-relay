@@ -1,13 +1,8 @@
-"""Точка входа: `python -m webhook_relay` или команда `webhook-relay`."""
+"""Entry points: `python -m webhook_relay` or the `webhook-relay` command."""
 
+import sys
 
-def greet(name: str) -> str:
-    return f"Привет, {name}!"
-
-
-def main() -> None:
-    print(greet("мир"))
-
+from webhook_relay.cli import main
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

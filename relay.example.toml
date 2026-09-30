@@ -1,0 +1,49 @@
+# Скопируйте в relay.toml. Секреты — только в .env (здесь — лишь имена переменных).
+#
+# [[source]] — кто присылает вебхуки. Адрес для отправителя: https://ваш-домен/hooks/<name>
+# [[route]]  — куда пересылать. events — шаблоны типов: "invoice.*", "checkout.session.completed"; пусто — все.
+
+[[source]]
+name = "stripe"
+scheme = "stripe"                        # Stripe-Signature (t=…,v1=…)
+secret_env = "STRIPE_WEBHOOK_SECRET"     # whsec_… из Stripe Dashboard → Developers → Webhooks
+tolerance = 300                          # запрос старше 5 минут — отказ (защита от повторной отправки)
+event_id = "id"
+event_type = "type"
+
+[[source]]
+name = "github"
+scheme = "github"                        # X-Hub-Signature-256; тип и id события — из заголовков GitHub
+secret_env = "GITHUB_WEBHOOK_SECRET"
+
+[[source]]
+name = "site-form"
+scheme = "hmac"                          # наша схема: X-Timestamp + X-Signature (sha256=…)
+secret_env = "FORM_WEBHOOK_SECRET"
+event_id = "submission_id"
+event_type = "form"
+
+[[route]]
+name = "crm-payments"
+source = "stripe"
+events = ["checkout.session.completed", "invoice.*"]
+target = "https://crm.example.it/hooks/payments"
+secret_env = "CRM_RELAY_SECRET"          # подписываем то, что доставляем (получатель проверяет, как мы — входящие)
+
+[[route]]
+name = "telegram-notify"
+source = "stripe"
+events = ["charge.refunded"]
+target = "https://notify.example.it/refunds"
+
+[[route]]
+name = "ci"
+source = "github"
+events = ["push", "pull_request"]
+target = "https://ci.example.it/github"
+
+[[route]]
+name = "leads"
+source = "site-form"
+target = "https://leads.example.it/api/leads"
+secret_env = "LEADS_RELAY_SECRET"

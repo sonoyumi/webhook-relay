@@ -1,23 +1,22 @@
-# Секреты
+# Secrets and your own routing
 .env
 .env.*
 !.env.example
+relay.toml
 
-# Данные и логи
+# Stored events contain customer data
 data/
 *.db
-*.sqlite3
-*.log
+*.db-wal
+*.db-shm
 
 # Python
 __pycache__/
 *.py[cod]
 .venv/
-venv/
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
-.mypy_cache/
 dist/
 build/
 
